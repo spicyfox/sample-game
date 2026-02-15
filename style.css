@@ -22,6 +22,7 @@ canvas {
     background-color: #000;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+    touch-action: none;
 }
 
 #ui {

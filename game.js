@@ -73,6 +73,26 @@ const keys = {};
 window.addEventListener('keydown', e => keys[e.code] = true);
 window.addEventListener('keyup', e => keys[e.code] = false);
 
+// Touch Controls
+let isTouching = false;
+let touchX = 0;
+
+canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    isTouching = true;
+    touchX = e.touches[0].clientX;
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    touchX = e.touches[0].clientX;
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    isTouching = false;
+}, { passive: false });
+
 class Player {
     constructor() {
         this.width = 20;
@@ -86,13 +106,27 @@ class Player {
     }
 
     update() {
+        // Keyboard movement
         if (keys['ArrowLeft'] || keys['KeyA']) this.x -= this.speed;
         if (keys['ArrowRight'] || keys['KeyD']) this.x += this.speed;
+
+        // Touch movement
+        if (isTouching) {
+            const canvasRect = canvas.getBoundingClientRect();
+            const relativeTouchX = (touchX - canvasRect.left) / scale;
+            
+            if (relativeTouchX < this.x + this.width / 2) {
+                this.x -= this.speed;
+            } else {
+                this.x += this.speed;
+            }
+        }
 
         if (this.x < 0) this.x = 0;
         if (this.x > WIDTH - this.width) this.x = WIDTH - this.width;
 
-        if (keys['Space'] && this.shootTimer <= 0) {
+        // Shooting (Auto-shoot on touch or Spacebar)
+        if ((keys['Space'] || isTouching) && this.shootTimer <= 0) {
             this.bullets.push(new Bullet(this.x + this.width / 2 - 2, this.y));
             this.shootTimer = 15;
         }
@@ -116,8 +150,8 @@ class Bullet {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.width = 4;
-        this.height = 10;
+        this.width = 10;
+        this.height = 12;
         this.speed = 6;
         this.color = '#ffff00';
         this.toRemove = false;
