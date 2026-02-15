@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Shooter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui">
+            <div id="score">Score: 0</div>
+            <div id="start-screen">
+                <h1>PIXEL SHOOTER</h1>
+                <p>Select Difficulty:</p>
+                <button onclick="startGame('easy')">Easy (하)</button>
+                <button onclick="startGame('medium')">Medium (중)</button>
+                <button onclick="startGame('hard')">Hard (상)</button>
+            </div>
+            <div id="game-over" style="display: none;">
+                <h1>GAME OVER</h1>
+                <button onclick="showStartScreen()">Main Menu</button>
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
